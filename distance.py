@@ -1,7 +1,8 @@
 # distance.py
 
-from HashTable import HashTable
+
 from queue import SimpleQueue
+import timeit
 
 
 def formatPath(w1: str, w2: str, d: dict):
@@ -17,7 +18,7 @@ def formatPath(w1: str, w2: str, d: dict):
     return (path, length)
 
 
-def distance(w1: str, w2: str, words: HashTable) -> str:
+def distance(w1: str, w2: str, words: set) -> str:
     d = dict()
     q = SimpleQueue()
     current = ""
@@ -35,7 +36,7 @@ def distance(w1: str, w2: str, words: HashTable) -> str:
             for i in range(97,123):
                 temp = temp[:letter] + chr(i) + temp[letter + 1:]
                 
-                if words.contains(temp) == True:
+                if temp in words:
                     if d.get(temp) == None:
                         d[temp] = current
                         
@@ -50,12 +51,12 @@ def distance(w1: str, w2: str, words: HashTable) -> str:
 
 
 def run():
-    ht = HashTable()
+    s = set()
     
     # words_alpha.txt from https://github.com/dwyl/english-words/blob/master/words_alpha.txt
     f = open("./words_alpha.txt", "r")
     for line in f:
-        ht.add(line.strip())
+        s.add(line.strip())
     
     
     print("Lewis Carroll Distance")
@@ -73,7 +74,7 @@ def run():
         if word2 == "!q":
             break
             
-        dist = distance(word1, word2, ht)
+        dist = distance(word1, word2, s)
         
         if dist[0] == "":
             print("no path found with current dict")
