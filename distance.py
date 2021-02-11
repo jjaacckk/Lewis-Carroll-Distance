@@ -2,7 +2,7 @@
 
 
 from queue import SimpleQueue
-import timeit
+import sys, json
 
 
 def formatPath(path: list) -> str:
@@ -19,6 +19,7 @@ def getPath(w1: str, w2: str, d: dict) -> (int, list):
         path.append(current)
         length += 1
         
+    path.reverse()    
     return (length, path)
 
 
@@ -57,15 +58,7 @@ def distance(w1: str, w2: str, words: set) -> (int, list):
 
 
 
-def run():
-    s = set()
-    
-    # words_alpha.txt from https://github.com/dwyl/english-words/blob/master/words_alpha.txt
-    f = open("./words_alpha.txt", "r")
-    for line in f:
-        s.add(line.strip())
-    
-    
+def runUI(s: set) -> None:
     print("Lewis Carroll Distance")
     print("*press '!q' to quit")
     word1 = ""
@@ -91,9 +84,23 @@ def run():
         
         
     print("\ngoodbye.")
-
+    
+    
+def runSysArg(s: set) -> json:
+    dist = distance(sys.argv[1], sys.argv[2], s)
+    d = {"distance": dist[0], "path": dist[1]}
+    return json.dumps(d)
+    
 
 if __name__ == "__main__":
-    run()
+    s = set()
+    
+    # words_alpha.txt from https://github.com/dwyl/english-words/blob/master/words_alpha.txt
+    f = open("./words_alpha.txt", "r")
+    for line in f:
+        s.add(line.strip())
+        
+    runUI(s)
+#    print(runSysArg(s))
 
     
