@@ -5,20 +5,24 @@ from queue import SimpleQueue
 import timeit
 
 
-def formatPath(w1: str, w2: str, d: dict):
-    path = w2
+def formatPath(path: list) -> str:
+    return " --> ".join(path)
+
+
+def getPath(w1: str, w2: str, d: dict) -> (int, list):
+    path = [w2]
     current = w2
     length = 0
     
     while current != w1:
         current = d[current]
-        path = current + " --> " + path
+        path.append(current)
         length += 1
         
-    return (path, length)
+    return (length, path)
 
 
-def distance(w1: str, w2: str, words: set) -> str:
+def distance(w1: str, w2: str, words: set) -> (int, list):
     d = dict()
     q = SimpleQueue()
     current = ""
@@ -26,6 +30,9 @@ def distance(w1: str, w2: str, words: set) -> str:
     
     q.put(w1)
     d[w1] = w1
+    
+    if w1 == w2:
+        return (0, [w1])
     
     while q.empty() == False:
         current = q.get()
@@ -41,12 +48,12 @@ def distance(w1: str, w2: str, words: set) -> str:
                         d[temp] = current
                         
                         if temp == w2:
-                            return formatPath(w1, w2, d)
+                            return getPath(w1, w2, d)
                         
                         q.put(temp)
     
     
-    return ("", -1)
+    return ([], -1)
 
 
 
@@ -76,11 +83,11 @@ def run():
             
         dist = distance(word1, word2, s)
         
-        if dist[0] == "":
+        if dist[0] == -1:
             print("no path found with current dict")
         else:
-            print("distance: ", dist[1])
-            print(dist[0])
+            print("distance: ", dist[0])
+            print("path: ", formatPath(dist[1]))
         
         
     print("\ngoodbye.")
