@@ -75,8 +75,8 @@ def runUI(s: set) -> None:
             break
             
         dist = distance(word1, word2, s)
-        
-        if dist[0] == -1:
+
+        if dist[1] == -1:
             print("no path found with current dict")
         else:
             print("distance: ", dist[0])
